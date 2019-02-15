@@ -1,0 +1,36 @@
+/* First Insight "Total Money Paid By Each Customer"*/
+select Customer.FirstName, sum(invoice.total) as sum_total
+from Customer
+join Invoice
+on Customer.CustomerId=Invoice.CustomerId
+group by Customer.CustomerId
+order by sum_total DESC
+
+/* Second Insight "Top 10 Rock Artists"*/
+select Artist.ArtistId, Artist.Name, count(artist.Name) as songs
+from Artist
+join Album on Album.ArtistId=Artist.ArtistId
+join Track on Track.AlbumId=Album.AlbumId
+join Genre on Genre.GenreId=Track.GenreId
+where Genre.Name="Rock"
+group by Artist.Name
+order by songs desc
+limit 10
+
+/* Third Insight "Top 20 Most Earned Artists" */
+select Artist.Name, sum(Track.UnitPrice) AmountSpent
+from Artist
+join Album on Artist.ArtistId=Album.ArtistId
+join Track on Album.AlbumId=Track.AlbumId
+join InvoiceLine on Track.TrackId=InvoiceLine.TrackId
+join Invoice on InvoiceLine.InvoiceId=Invoice.InvoiceId
+group by Artist.Name
+order by AmountSpent desc
+limit 20
+
+/* Fourth Insight " Average Track-Length By Genre" */
+select Genre.Name, avg(Track.Milliseconds)/(1000*60) as "AvgLength(minutes)"
+from Genre
+join Track on Track.GenreId=Genre.GenreId
+group by Genre.Name
+order by "AvgLength(minutes)" desc
